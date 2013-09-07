@@ -1,7 +1,5 @@
 package aes
 
-import ()
-
 type AES struct {
 	key []byte
 }
@@ -10,8 +8,17 @@ func (a *AES) Encode(input []byte) []byte {
 	state := make([]byte, 16)
 	copy(state, input)
 
-	numRounds := len(a.key)/2 + 1
-	roundKey := generate128(a.key)
+	numRounds := len(a.key)/4 + 5
+
+	var roundKey expander
+	switch len(a.key) {
+	case 16:
+		roundKey = generate128(a.key)
+	case 24:
+		roundKey = generate192(a.key)
+	case 32:
+		roundKey = generate256(a.key)
+	}
 
 	xor(state, roundKey())
 
