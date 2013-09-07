@@ -9,7 +9,7 @@ func generateKey(key []byte, nk int) expander {
 	copy(temp, key[nk*4-4:nk*4])
 
 	i := 0
-	return func() []byte {
+	next := func() []byte {
 		defer (func() { i++ })()
 
 		if i < nk {
@@ -32,6 +32,17 @@ func generateKey(key []byte, nk int) expander {
 		q <- save
 
 		return save
+	}
+
+	return func() []byte {
+		roundKey := make([]byte, 16)
+
+		copy(roundKey[0:4], next())
+		copy(roundKey[4:8], next())
+		copy(roundKey[8:12], next())
+		copy(roundKey[12:16], next())
+
+		return roundKey
 	}
 }
 
