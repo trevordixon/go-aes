@@ -23,7 +23,7 @@ func generateKey(key []byte, nk int) expander {
 		}
 
 		if nk == 8 && (i-4)%nk == 0 {
-			subWord(temp)
+			subBytes(temp)
 		}
 
 		xor(temp, <-q)
@@ -60,7 +60,7 @@ func generate256(key []byte) expander {
 
 func core(word []byte, i int) {
 	rotWord(word)
-	subWord(word)
+	subBytes(word)
 	rcon(word, i)
 }
 
@@ -70,7 +70,7 @@ func rotWord(word []byte) {
 	word[3] = first
 }
 
-func subWord(word []byte) {
+func subBytes(word []byte) {
 	for i, b := range word {
 		word[i] = sbox[b]
 	}

@@ -82,10 +82,10 @@ func TestRotateWord(t *testing.T) {
 }
 
 /////////////////////////////////////////
-///////////// Sbox Tests ////////////////
+/////////// SubBytes Tests //////////////
 /////////////////////////////////////////
 
-var sboxTests = []struct {
+var subBytesTests = []struct {
 	word string
 	out  string
 }{
@@ -101,10 +101,10 @@ var sboxTests = []struct {
 	{"5c006e57", "4a639f5b"},
 }
 
-func TestSubWord(t *testing.T) {
-	for _, test := range sboxTests {
+func TestSubBytes(t *testing.T) {
+	for _, test := range subBytesTests {
 		word, _ := hex.DecodeString(test.word)
-		subWord(word)
+		subBytes(word)
 		sWord := hex.EncodeToString(word)
 		if sWord != test.out {
 			t.Error(test.word, "should have been substituted to", test.out, "but was instead", sWord)
