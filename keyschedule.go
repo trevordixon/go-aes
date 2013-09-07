@@ -81,7 +81,7 @@ func rcon(word []byte, i int) {
 }
 
 func xor(word1 []byte, word2 []byte) {
-	for i, _ := range word1 {
+	for i := range word1 {
 		word1[i] ^= word2[i]
 	}
 }
