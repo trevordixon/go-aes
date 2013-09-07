@@ -2,7 +2,7 @@ package aes
 
 type expander func() []byte
 
-func generate128or192(key []byte, nk int) expander {
+func generateKey(key []byte, nk int) expander {
 	q := make(chan []byte, nk)
 
 	temp := make([]byte, 4)
@@ -22,6 +22,10 @@ func generate128or192(key []byte, nk int) expander {
 			core(temp, i/nk)
 		}
 
+		if nk == 8 && (i-4)%nk == 0 {
+			subWord(temp)
+		}
+
 		xor(temp, <-q)
 		save := make([]byte, 4)
 		copy(save, temp)
@@ -32,11 +36,15 @@ func generate128or192(key []byte, nk int) expander {
 }
 
 func generate128(key []byte) expander {
-	return generate128or192(key, 4)
+	return generateKey(key, 4)
 }
 
 func generate192(key []byte) expander {
-	return generate128or192(key, 6)
+	return generateKey(key, 6)
+}
+
+func generate256(key []byte) expander {
+	return generateKey(key, 8)
 }
 
 func core(word []byte, i int) {
