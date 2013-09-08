@@ -36,6 +36,16 @@ func Example192() {
 	// Output: dda97ca4864cdfe06eaf70a0ec0d7191
 }
 
+func ExampleAnother192() {
+	key, _ := hex.DecodeString("04050607090A0B0C0E0F10111314151618191A1B1D1E1F20")
+	input, _ := hex.DecodeString("76777475F1F2F3F4F8F9E6E777707172")
+
+	aes := &AES{key}
+	fmt.Println(hex.EncodeToString(aes.Encode(input)))
+
+	// Output: 5d1ef20dced6bcbc12131ac7c54788aa
+}
+
 func Example256() {
 	key, _ := hex.DecodeString("000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f")
 	input, _ := hex.DecodeString("00112233445566778899aabbccddeeff")
@@ -44,6 +54,16 @@ func Example256() {
 	fmt.Println(hex.EncodeToString(aes.Encode(input)))
 
 	// Output: 8ea2b7ca516745bfeafc49904b496089
+}
+
+func ExampleAnother256() {
+	key, _ := hex.DecodeString("08090A0B0D0E0F10121314151718191A1C1D1E1F21222324262728292B2C2D2E")
+	input, _ := hex.DecodeString("069A007FC76A459F98BAF917FEDF9521")
+
+	aes := &AES{key}
+	fmt.Println(hex.EncodeToString(aes.Encode(input)))
+
+	// Output: 080e9517eb1677719acf728086040ae3
 }
 
 func Example128Decode() {
@@ -76,6 +96,16 @@ func Example192Decode() {
 	// Output: 00112233445566778899aabbccddeeff
 }
 
+func ExampleAnother192Decode() {
+	key, _ := hex.DecodeString("04050607090A0B0C0E0F10111314151618191A1B1D1E1F20")
+	input, _ := hex.DecodeString("5d1ef20dced6bcbc12131ac7c54788aa")
+
+	aes := &AES{key}
+	fmt.Println(hex.EncodeToString(aes.Decode(input)))
+
+	// Output: 76777475f1f2f3f4f8f9e6e777707172
+}
+
 func Example256Decode() {
 	key, _ := hex.DecodeString("000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f")
 	input, _ := hex.DecodeString("8ea2b7ca516745bfeafc49904b496089")
@@ -84,6 +114,16 @@ func Example256Decode() {
 	fmt.Println(hex.EncodeToString(aes.Decode(input)))
 
 	// Output: 00112233445566778899aabbccddeeff
+}
+
+func ExampleAnother256Decode() {
+	key, _ := hex.DecodeString("08090a0b0d0e0f10121314151718191a1c1d1e1f21222324262728292b2c2d2e")
+	input, _ := hex.DecodeString("080e9517eb1677719acf728086040ae3")
+
+	aes := &AES{key}
+	fmt.Println(hex.EncodeToString(aes.Decode(input)))
+
+	// Output: 069a007fc76a459f98baf917fedf9521
 }
 
 var mixColumnsTests = []struct {
