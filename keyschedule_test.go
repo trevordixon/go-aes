@@ -112,6 +112,17 @@ func TestSubBytes(t *testing.T) {
 	}
 }
 
+func TestSubBytesReverse(t *testing.T) {
+	for _, test := range subBytesTests {
+		word, _ := hex.DecodeString(test.out)
+		subBytesReverse(word)
+		sWord := hex.EncodeToString(word)
+		if sWord != test.word {
+			t.Error(test.out, "should have been substituted to", test.word, "but was instead", sWord)
+		}
+	}
+}
+
 /////////////////////////////////////////
 /////////// Rcon Word Tests /////////////
 /////////////////////////////////////////
