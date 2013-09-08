@@ -73,9 +73,3 @@ func rotWord(word []byte) {
 	copy(word, word[1:])
 	word[3] = first
 }
-
-func xor(word1 []byte, word2 []byte) {
-	for i := range word1 {
-		word1[i] ^= word2[i]
-	}
-}
