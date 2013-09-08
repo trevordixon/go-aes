@@ -2,7 +2,8 @@ package aes
 
 type expander func() []byte
 
-func generateKey(key []byte, nk int) expander {
+func generateKey(key []byte) expander {
+	nk := len(key) / 4
 	q := make(chan []byte, nk)
 
 	temp := make([]byte, 4)
@@ -46,16 +47,19 @@ func generateKey(key []byte, nk int) expander {
 	}
 }
 
-func generate128(key []byte) expander {
-	return generateKey(key, 4)
-}
+func generateKeyReverse(key []byte) expander {
+	roundKey := generateKey(key)
+	numRounds := len(key)/4 + 7
+	roundKeys := make([][]byte, numRounds)
+	for i := numRounds - 1; i >= 0; i-- {
+		roundKeys[i] = roundKey()
+	}
 
-func generate192(key []byte) expander {
-	return generateKey(key, 6)
-}
-
-func generate256(key []byte) expander {
-	return generateKey(key, 8)
+	i := 0
+	return func() []byte {
+		defer (func() { i++ })()
+		return roundKeys[i]
+	}
 }
 
 func core(word []byte, i int) {
@@ -68,12 +72,6 @@ func rotWord(word []byte) {
 	first := word[0]
 	copy(word, word[1:])
 	word[3] = first
-}
-
-func subBytes(word []byte) {
-	for i, b := range word {
-		word[i] = sbox[b]
-	}
 }
 
 func rcon(word []byte, i int) {

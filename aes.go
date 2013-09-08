@@ -8,17 +8,8 @@ func (a *AES) Encode(input []byte) []byte {
 	state := make([]byte, 16)
 	copy(state, input)
 
+	roundKey := generateKey(a.key)
 	numRounds := len(a.key)/4 + 5
-
-	var roundKey expander
-	switch len(a.key) {
-	case 16:
-		roundKey = generate128(a.key)
-	case 24:
-		roundKey = generate192(a.key)
-	case 32:
-		roundKey = generate256(a.key)
-	}
 
 	xor(state, roundKey())
 
@@ -37,7 +28,27 @@ func (a *AES) Encode(input []byte) []byte {
 }
 
 func (a *AES) Decode(input []byte) []byte {
-	return input
+	state := make([]byte, 16)
+	copy(state, input)
+
+	numRounds := len(a.key)/4 + 5
+
+	roundKey := generateKeyReverse(a.key)
+
+	xor(state, roundKey())
+	shiftRowsReverse(state)
+	subBytesReverse(state)
+
+	for i := 0; i < numRounds; i++ {
+		xor(state, roundKey())
+		mixColumnsReverse(state)
+		shiftRowsReverse(state)
+		subBytesReverse(state)
+	}
+
+	xor(state, roundKey())
+
+	return state
 }
 
 func swap(state []byte, i, j int) {
@@ -59,4 +70,19 @@ func shiftRows(state []byte) {
 	swap(state, 11, 15)
 	swap(state, 7, 11)
 	swap(state, 3, 7)
+}
+
+func shiftRowsReverse(state []byte) {
+	swap(state, 9, 13)
+	swap(state, 5, 9)
+	swap(state, 1, 5)
+
+	swap(state, 6, 10)
+	swap(state, 2, 6)
+	swap(state, 10, 14)
+	swap(state, 6, 10)
+
+	swap(state, 3, 7)
+	swap(state, 7, 11)
+	swap(state, 11, 15)
 }

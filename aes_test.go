@@ -46,6 +46,46 @@ func Example256() {
 	// Output: 8ea2b7ca516745bfeafc49904b496089
 }
 
+func Example128Decode() {
+	key := []byte{0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c}
+	input, _ := hex.DecodeString("3925841d02dc09fbdc118597196a0b32")
+
+	aes := &AES{key}
+	fmt.Println(hex.EncodeToString(aes.Decode(input)))
+
+	// Output: 3243f6a8885a308d313198a2e0370734
+}
+
+func ExampleAnother128Decode() {
+	key, _ := hex.DecodeString("000102030405060708090a0b0c0d0e0f")
+	input, _ := hex.DecodeString("69c4e0d86a7b0430d8cdb78070b4c55a")
+
+	aes := &AES{key}
+	fmt.Println(hex.EncodeToString(aes.Decode(input)))
+
+	// Output: 00112233445566778899aabbccddeeff
+}
+
+func Example192Decode() {
+	key, _ := hex.DecodeString("000102030405060708090a0b0c0d0e0f1011121314151617")
+	input, _ := hex.DecodeString("dda97ca4864cdfe06eaf70a0ec0d7191")
+
+	aes := &AES{key}
+	fmt.Println(hex.EncodeToString(aes.Decode(input)))
+
+	// Output: 00112233445566778899aabbccddeeff
+}
+
+func Example256Decode() {
+	key, _ := hex.DecodeString("000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f")
+	input, _ := hex.DecodeString("8ea2b7ca516745bfeafc49904b496089")
+
+	aes := &AES{key}
+	fmt.Println(hex.EncodeToString(aes.Decode(input)))
+
+	// Output: 00112233445566778899aabbccddeeff
+}
+
 var mixColumnsTests = []struct {
 	before string
 	after  string
