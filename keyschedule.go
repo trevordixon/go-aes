@@ -11,7 +11,7 @@ func generateKey(key []byte) expander {
 
 	i := 0
 	next := func() []byte {
-		defer (func() { i++ })()
+		defer func() { i++ }()
 
 		if i < nk {
 			next := key[i*4 : i*4+4]
@@ -59,7 +59,7 @@ func generateKeyReverse(key []byte) expander {
 
 	i := 0
 	return func() []byte {
-		defer (func() { i++ })()
+		defer func() { i++ }()
 		return roundKeys[i]
 	}
 }
