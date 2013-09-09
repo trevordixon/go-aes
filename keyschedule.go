@@ -20,7 +20,9 @@ func generateKey(key []byte) expander {
 		}
 
 		if i%nk == 0 {
-			core(temp, i/nk)
+			rotWord(temp)
+			subBytes(temp)
+			rcon(temp, i/nk)
 		}
 
 		if nk == 8 && (i-4)%nk == 0 {
@@ -60,12 +62,6 @@ func generateKeyReverse(key []byte) expander {
 		defer (func() { i++ })()
 		return roundKeys[i]
 	}
-}
-
-func core(word []byte, i int) {
-	rotWord(word)
-	subBytes(word)
-	rcon(word, i)
 }
 
 func rotWord(word []byte) {

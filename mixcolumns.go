@@ -1,6 +1,42 @@
 package aes
 
 type multiplier func(byte) byte
+type matrix4 [4][4]multiplier
+
+func mix(state []byte, m matrix4) {
+	_state := make([]byte, 16)
+	copy(_state, state)
+
+	for i := range state {
+		r := i % 4
+		s := (i / 4) * 4
+
+		var f byte = 0
+		for j, m := range m[r] {
+			f ^= m(_state[s+j])
+		}
+
+		state[i] = f
+	}
+}
+
+func mixColumns(state []byte) {
+	mix(state, [4][4]multiplier{
+		[4]multiplier{mult2, mult3, mult1, mult1},
+		[4]multiplier{mult1, mult2, mult3, mult1},
+		[4]multiplier{mult1, mult1, mult2, mult3},
+		[4]multiplier{mult3, mult1, mult1, mult2},
+	})
+}
+
+func mixColumnsReverse(state []byte) {
+	mix(state, [4][4]multiplier{
+		[4]multiplier{mult14, mult11, mult13, mult9},
+		[4]multiplier{mult9, mult14, mult11, mult13},
+		[4]multiplier{mult13, mult9, mult14, mult11},
+		[4]multiplier{mult11, mult13, mult9, mult14},
+	})
+}
 
 var mult1 multiplier = func(b byte) byte {
 	return b
@@ -142,52 +178,4 @@ var mult14 multiplier = func(b byte) byte {
 	}
 
 	return m[b]
-}
-
-func mixColumns(state []byte) {
-	m := [4][4]multiplier{
-		[4]multiplier{mult2, mult3, mult1, mult1},
-		[4]multiplier{mult1, mult2, mult3, mult1},
-		[4]multiplier{mult1, mult1, mult2, mult3},
-		[4]multiplier{mult3, mult1, mult1, mult2},
-	}
-
-	_state := make([]byte, 16)
-	copy(_state, state)
-
-	for i := range state {
-		r := i % 4
-		s := (i / 4) * 4
-
-		var f byte = 0
-		for j, m := range m[r] {
-			f ^= m(_state[s+j])
-		}
-
-		state[i] = f
-	}
-}
-
-func mixColumnsReverse(state []byte) {
-	m := [4][4]multiplier{
-		[4]multiplier{mult14, mult11, mult13, mult9},
-		[4]multiplier{mult9, mult14, mult11, mult13},
-		[4]multiplier{mult13, mult9, mult14, mult11},
-		[4]multiplier{mult11, mult13, mult9, mult14},
-	}
-
-	_state := make([]byte, 16)
-	copy(_state, state)
-
-	for i := range state {
-		r := i % 4
-		s := (i / 4) * 4
-
-		var f byte = 0
-		for j, m := range m[r] {
-			f ^= m(_state[s+j])
-		}
-
-		state[i] = f
-	}
 }
